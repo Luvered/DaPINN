@@ -121,7 +121,7 @@ cb.set_label('error(x,t)')
 plt.xlabel('x')
 plt.ylabel('t')
 
-# 2. DAPINN
+# 2. DaPINN
 
 def pde(x, y):
     dy_t = dde.grad.jacobian(y, x, i=0, j=2)
@@ -198,7 +198,7 @@ print("Mean residual:", mr)
 print("L2 relative error:", mse)
 print("C error", ce)
 
-print("—————————— DAPINN ——————————")
+print("—————————— DaPINN ——————————")
 print("Mean residual:", np.mean(np.absolute(f)))
 print("L2 relative error:", dde.metrics.l2_relative_error(y_true, y_pred))
 print("C error",abs(variable.value[0]-1))
@@ -220,7 +220,7 @@ u = u.reshape(x.shape)
 uhat = uhat.reshape(x.shape)
 
 fig4 = plt.figure()
-plt.title('DAPINN: u(x,t)')
+plt.title('DaPINN: u(x,t)')
 plt.pcolormesh(x,t,u,cmap='inferno')
 cb=plt.colorbar()
 cb.set_label('u(x,t)')
@@ -228,7 +228,7 @@ plt.xlabel('x')
 plt.ylabel('t')
 
 fig5 = plt.figure()
-plt.title('DAPINN: error')
+plt.title('DaPINN: error')
 plt.pcolormesh(x,t,u-uhat,cmap='inferno') 
 cb=plt.colorbar()
 cb.set_label('error(x,t)')
