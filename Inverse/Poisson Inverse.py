@@ -87,7 +87,7 @@ ktrue = k(x)
 utrue = sol(x[:, 0:1])
 
 
-# 2. DAPINN
+# 2. DaPINN
 
 def pde(x, y):
     u, f = y[:, 0:1], y[:, 1:2]
@@ -140,7 +140,7 @@ print("—————————— PINN ——————————")
 print("L2 relative error of f(x):",dde.metrics.l2_relative_error(khato, ktrue[:, 0:1]))
 print("L2 relative error of u(x):",dde.metrics.l2_relative_error(uhato, utrue))
 
-print("—————————— DAPINN ——————————")
+print("—————————— DaPINN ——————————")
 print("L2 relative error of f(x):", dde.metrics.l2_relative_error(khat, ktrue[:, 0:1]))
 print("L2 relative error of u(x):",dde.metrics.l2_relative_error(uhat, utrue))
 
