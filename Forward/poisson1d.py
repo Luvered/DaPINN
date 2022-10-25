@@ -53,7 +53,7 @@ def DaPINNcopypde(x, y):
 
 geom = dde.geometry.Interval(0, np.pi)
 bc = dde.icbc.DirichletBC(geom, func, boundary)
-data = dde.data.PDE(geom, DaPINNcopypde, bc, 21, 2 , solution=func, num_test=2000,mode="copy2")
+data = dde.data.PDE(geom, DaPINNcopypde, bc, 24, 2 , solution=func, num_test=2000,mode="copy2")
 
 layer_size = [2] + [20] * 4 + [1]
 activation = "tanh"
@@ -96,7 +96,7 @@ def DaPINNpde(x, y):
 
 geom = dde.geometry.Interval(0, np.pi)
 bc = dde.icbc.DirichletBC(geom, func, boundary)
-DaPINNx2data = dde.data.PDE(geom, DaPINNpde, bc, 21, 2 , solution=func, num_test=2000,mode="x2")
+DaPINNx2data = dde.data.PDE(geom, DaPINNpde, bc, 24, 2 , solution=func, num_test=2000,mode="x2")
 
 layer_size = [2] + [20] * 4 + [1]
 activation = "tanh"
@@ -137,7 +137,7 @@ def func(x):
 
 geom = dde.geometry.Interval(0, np.pi)
 bc = dde.icbc.DirichletBC(geom, func, boundary)
-PINNdata = dde.data.PDE(geom, PINNpde, bc, 21, 2, solution=func, num_test=2000)
+PINNdata = dde.data.PDE(geom, PINNpde, bc, 24, 2, solution=func, num_test=2000)
 
 layer_size = [1] + [20] * 4 + [1]
 activation = "tanh"
@@ -166,23 +166,37 @@ print("daPINN with x^2 :L2 relative error of u",
 print("PINN :L2 relative error of u",
     pinnerror)
 # Plot PDE residual
+def _pack_data(train_state):
+    def merge_values(values):
+        if values is None:
+            return None
+        return np.hstack(values) if isinstance(values, (list, tuple)) else values
+
+    y_train = merge_values(train_state.y_train)
+    y_test = merge_values(train_state.y_test)
+    best_y = merge_values(train_state.best_y)
+    best_ystd = merge_values(train_state.best_ystd)
+    return y_train, y_test, best_y, best_ystd
+
 x = gen_test_x(500)
 x2 = gen_test_x2(500)
-
+y_train, y_test, best_y, best_ystd = _pack_data(train_state)
 ye=func(x[:,0:1])
 y1 = PINNmodel.predict(x[:,0:1])
-y2 = DaPINNx2model.predict(x2)
-y3 = DaPINNcopymodel.predict(x)
-plt.figure()
+y2 = DaPINNcopymodel.predict(x)
+y3 = DaPINNx2model.predict(x2)
+fig=plt.figure()
 ax=plt.axes()
+ax.plot(train_state.X_train[:, 0], y_train[:, 0], "ok", label="Train")
 ax.plot(x[:,0:1],ye,c='k',label="ture" )
 ax.plot(x[:,0:1],y1,linestyle='--',c=(51/255,102/255,153/255),label="PINN" )
-ax.plot(x[:,0:1],y2,linestyle='--',c=(254/255,194/255,17/255),label="DaPINN x2")
-ax.plot(x[:,0:1],y3,linestyle='--',c=(239/255,0/255,0/255),label="DaPINN copy")
-
+ax.plot(x[:,0:1],y2,linestyle='--',c=(230/255,190/255,47/255),label="DaPINN with x")
+ax.plot(x[:,0:1],y3,linestyle='--',c=(239/255,0/255,0/255),label="DaPINN with x^2")
+plt.xlim(0.75,2)
+plt.ylim(1.7,2.7)
 plt.xlabel('x', fontsize =20)
-plt.ylabel('u', fontsize =30)
+plt.ylabel('u', fontsize =20)
 ax.grid()
 plt.legend(loc='lower right',framealpha=1,frameon=True);
-
+plt.tight_layout()
 plt.show()

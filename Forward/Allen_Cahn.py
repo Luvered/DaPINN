@@ -4,7 +4,9 @@ Implementation of Allen-Cahn equation example in paper https://arxiv.org/abs/211
 """
 import sys
 import time
-
+import matplotlib.pyplot as plt
+from matplotlib import ticker, cm
+from matplotlib.pyplot import MultipleLocator
 import dapinn as dde
 import numpy as np
 from scipy.io import loadmat
@@ -77,14 +79,14 @@ print('训练时间: ', time_sum)
 dapinnx3error=dde.metrics.l2_relative_error(y_true, y_pred)
 
 #DAPINN fourier
-def gen_testdata():
+def gen_testdatafourier():
     data = loadmat("./Allen_Cahn.mat")
 
     t = data["t"]
     x = data["x"]
     u = data["u"]
 
-    dt = dx = 0.01
+
     xx, tt = np.meshgrid(x, t)
     X = np.vstack((np.ravel(xx), np.ravel(tt))).T
     t_2=X[:, 1:2]*X[:, 1:2]
@@ -128,7 +130,7 @@ DAPINNFOURIERmodel.train(epochs=30000)
 DAPINNFOURIERmodel.compile("L-BFGS")
 DAPINNFOURIERmodel.train()
 
-X, y_true = gen_testdata()
+X, y_true = gen_testdatafourier()
 y_pred = DAPINNFOURIERmodel.predict(X)
 f = DAPINNFOURIERmodel.predict(X, operator=DAPINNFOURIERpde)
 
@@ -200,7 +202,69 @@ print("daPINN with x^3 :L2 relative error of u",
 print("PINN :L2 relative error of u",
       pinnerror)
 
+def plt1d(x,y_ture,y_predict,name):
+    # 1D
+    y_ture_1=y_ture[:,25]
+    y_predict_1=y_predict[:,25]
+    y_ture_2=y_ture[:,50]
+    y_predict_2=y_predict[:,50]
+    y_ture_3=y_ture[:,75]
+    y_predict_3=y_predict[:,75]
+    plt.figure()
+    plt.plot(x, y_ture_1, "-k", label="True")
+    plt.plot(x, y_predict_1, "--r", label="Prediction")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title(name+' t=0.25')
+    plt.legend()
+    plt.show()
+    plt.figure()
+    plt.plot(x, y_ture_2, "-k", label="True")
+    plt.plot(x, y_predict_2, "--r", label="Prediction")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.legend()
+    plt.title(name+' t=0.5')
+    plt.show()
+    plt.figure()
+    plt.plot(x, y_ture_3, "-k", label="True")
+    plt.plot(x, y_predict_3, "--r", label="Prediction")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title(name+' t=0.75')
+    plt.legend()
+    plt.show()
+
+def DApinngen_plt_x():
+    X, y_true = gen_testdatafourier()
+    y_pred = DAPINNFOURIERmodel.predict(X)
+    x_1  = np.linspace(-1, 1, 201)
+    t_1 = np.linspace(0, 1, 101)
+
+    error = abs(y_true - y_pred)
+    y_pred = np.reshape(y_pred[:, 0], (101, 201)).T
+    error = np.reshape(error[:, 0], (101, 201)).T
+    y_true = np.reshape(y_true[:, 0], (101, 201)).T
+    return y_pred, error, y_true, x_1, t_1
 
 
 
+def gen_plt_x():
+    X, y_ture = gen_testdata()
+    y_pred = model.predict(X)
+    x_1= np.linspace(-1, 1, 201)
+    t_1= np.linspace(0, 1, 101)
+
+    error = abs(y_ture-y_pred)
+    y_pred = np.reshape(y_pred[:, 0], (101, 201)).T
+    error = np.reshape(error[:, 0], (101, 201)).T
+    y_ture=np.reshape(y_ture[:,0], (101, 201)).T
+    return y_pred,error,y_ture,x_1,t_1
+
+
+y_predict, error, y_true, x_1, t_1 = DApinngen_plt_x()
+plt1d(x_1,y_true,y_predict,'DAPINN')
+
+y_predict, error, y_true, x_1, t_1 = gen_plt_x()
+plt1d(x_1,y_true,y_predict,'PINN')
 

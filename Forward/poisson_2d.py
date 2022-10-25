@@ -94,15 +94,16 @@ def DApde(x, y):
 
 geom = dde.geometry.Rectangle([0, 0], [1, 1])
 DAdata = dde.data.PDE(geom, DApde, [],solution=sol, num_domain=500, num_test=10000,mode = "copy2xy")
-DAnet = dde.maps.FNN([4] + [50] * 3 + [1], "tanh", "Glorot normal")
+DAnet = dde.maps.FNN([4] + [50] * 3+ [1], "tanh", "Glorot normal")
 DAnet.apply_output_transform(output_transform)
 
 DAPINNmodel = dde.Model(DAdata, DAnet)
 time_start = time.time()  # 记录开始时间
-DAPINNmodel.compile("adam", lr=0.0001,metrics=["l2 relative error"])
-losshistory, train_state = DAPINNmodel.train(epochs=100000, callbacks=[])
+DAPINNmodel.compile("adam", lr=0.001,metrics=["l2 relative error"])
+losshistory, train_state = DAPINNmodel.train(epochs=20000, callbacks=[])
 DAPINNmodel.compile("L-BFGS", metrics=["l2 relative error"])
 losshistory, train_state =DAPINNmodel.train()
+
 time_end = time.time()  # 记录结束时间
 time_sum = time_end - time_start  # 计算的时间差为程序的执行时间，单位为秒/s
 print('训练时间: ', time_sum)
@@ -141,13 +142,14 @@ dax2net.apply_output_transform(output_transform)
 DAPINNX2model = dde.Model(dax2data, dax2net)
 time_start = time.time()  # 记录开始时间
 DAPINNX2model.compile("adam", lr=0.001,metrics=["l2 relative error"])
-DAPINNX2model.train(epochs=100000, callbacks=[])
+losshistory, train_state =DAPINNX2model.train(epochs=20000, callbacks=[])
 DAPINNX2model.compile("L-BFGS", metrics=["l2 relative error"])
 losshistory, train_state =DAPINNX2model.train()
 time_end = time.time()  # 记录结束时间
 time_sum = time_end - time_start  # 计算的时间差为程序的执行时间，单位为秒/s
 print('训练时间: ', time_sum)
 # 259.08
+dde.saveplot(losshistory, train_state, issave=True, isplot=False)
 loss_train = np.sum(losshistory.loss_train, axis=1)
 best_step = np.argmin(loss_train)
 best_metrics = np.array(losshistory.metrics_test)[best_step, :]
@@ -177,13 +179,14 @@ PINNnet.apply_output_transform(output_transform)
 
 PINNmodel = dde.Model(PINNdata, PINNnet)
 time_start = time.time()  # 记录开始时间
-PINNmodel.compile("adam", lr=0.0001,metrics=["l2 relative error"])
-PINNmodel.train(epochs=100000, callbacks=[])
+PINNmodel.compile("adam", lr=0.001,metrics=["l2 relative error"])
+losshistory, train_state =PINNmodel.train(epochs=20000, callbacks=[])
 PINNmodel.compile("L-BFGS", metrics=["l2 relative error"])
 losshistory, train_state =PINNmodel.train()
 time_end = time.time()  # 记录结束时间
 time_sum = time_end - time_start  # 计算的时间差为程序的执行时间，单位为秒/s
 print('训练时间: ', time_sum)# 175.62s
+dde.saveplot(losshistory, train_state, issave=True, isplot=False)
 loss_train = np.sum(losshistory.loss_train, axis=1)
 best_step= np.argmin(loss_train)
 best_metrics=np.array(losshistory.metrics_test)[best_step,:]
@@ -231,7 +234,7 @@ disp.reverse()
 plt.figure(figsize=(7, 7))
 plt.xlabel("x")
 plt.ylabel("y")
-plt.title("DAPINNX2 Prediction")
+plt.title("DAPINN COPY Prediction")
 
 ax = plt.gca()
 im = ax.imshow(disp, extent=(0, 1, 0, 1))
@@ -273,7 +276,7 @@ disp.reverse()
 plt.figure(figsize=(7, 7))
 plt.xlabel("x")
 plt.ylabel("y")
-plt.title("DAPINNX2 Absolute Error of u")
+plt.title("DAPINN COPY Absolute Error of u")
 
 ax = plt.gca()
 im = ax.imshow(disp, extent=(0, 1, 0, 1))

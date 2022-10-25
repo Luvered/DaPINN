@@ -86,7 +86,7 @@ daPINNfouriermodel.compile("L-BFGS",metrics=["l2 relative error"])
 losshistory, train_state = daPINNfouriermodel.train()
 time_end = time.time()  # 记录结束时间
 time_sum = time_end - time_start  # 计算的时间差为程序的执行时间，单位为秒/s
-print('训练时间: ', time_sum)# 训练时间:  239.08803939819336
+print('train time: ', time_sum)# 训练时间:  239.08803939819336
 # Plot/print the results
 loss_train = np.sum(losshistory.loss_train, axis=1)
 best_step = np.argmin(loss_train)
@@ -151,7 +151,7 @@ daPINNx3model.compile("L-BFGS", metrics=["l2 relative error"])
 losshistory, train_state=daPINNx3model.train()
 time_end = time.time()  # 记录结束时间
 time_sum = time_end - time_start  # 计算的时间差为程序的执行时间，单位为秒/s
-print('训练时间: ', time_sum)  # 训练时间:    223.429025888443
+print('train time:: ', time_sum)  # 训练时间:    223.429025888443
 
 # Plot/print the results
 loss_train = np.sum(losshistory.loss_train, axis=1)
@@ -238,7 +238,7 @@ PINNmodel.compile("L-BFGS", metrics=["l2 relative error"])
 losshistory, train_state = PINNmodel.train()
 time_end = time.time()  # 记录结束时间
 time_sum = time_end - time_start  # 计算的时间差为程序的执行时间，单位为秒/s
-print('训练时间: ', time_sum)  # 训练时间:  239.08803939819336
+print('train time: ', time_sum)  # 训练时间:  239.08803939819336
 # Plot/print the results
 loss_train = np.sum(losshistory.loss_train, axis=1)
 best_step = np.argmin(loss_train)
@@ -277,7 +277,7 @@ def gen_plt_xfourier(num):
     l = np.insert(l, [2], X_N_1, axis=1)
     l[:, [1, 3]] = l[:, [3, 1]]
 
-    y = PINNmodel.predict(l)
+    y = daPINNfouriermodel.predict(l)
     y_true = solution(l)
     error = abs(y_true-y)
     y = np.reshape(y[:, 0], (num, num))
@@ -323,11 +323,7 @@ ax.tick_params(labelsize=14)
 labels = ax.get_xticklabels() + ax.get_yticklabels()
 [label.set_fontname('Arial') for label in labels]
 #设置图像像素及大小
-plt.rcParams['figure.figsize']=(8.0,6)
-plt.rcParams['savefig.dpi'] = 300 #图片像素
-plt.rcParams['figure.dpi'] = 300 #分辨率
-fig.tight_layout(pad=0.5, h_pad=0.5, w_pad=0.5)
-fig.savefig('FIG9_f.eps', format='eps', dpi=100)
+plt.title('DaPINN fourier predict')
 plt.show()
 '''
 
@@ -367,12 +363,7 @@ ax.set_ylabel('$\t{t}$',font3)
 ax.tick_params(labelsize=14)
 labels = ax.get_xticklabels() + ax.get_yticklabels()
 [label.set_fontname('Arial') for label in labels]
-#设置图像像素及大小
-plt.rcParams['figure.figsize']=(6.0,4.5)
-plt.rcParams['savefig.dpi'] = 300 #图片像素
-plt.rcParams['figure.dpi'] = 300 #分辨率
-fig.tight_layout(pad=0.5, h_pad=0.5, w_pad=0.5)
-fig.savefig('FIG9_i.eps', format='eps', dpi=300)
+plt.title('DaPINN fourier error')
 plt.show()
 
 # plots dapinn x^3
@@ -442,12 +433,7 @@ ax.set_ylabel('$\t{t}$',font3)
 ax.tick_params(labelsize=14)
 labels = ax.get_xticklabels() + ax.get_yticklabels()
 [label.set_fontname('Arial') for label in labels]
-#设置图像像素及大小
-plt.rcParams['figure.figsize']=(8.0,6)
-plt.rcParams['savefig.dpi'] = 300 #图片像素
-plt.rcParams['figure.dpi'] = 300 #分辨率
-fig.tight_layout(pad=0.5, h_pad=0.5, w_pad=0.5)
-fig.savefig('FIG9_e.eps', format='eps', dpi=100)
+plt.title('DaPINN x^3 predict')
 plt.show()
 '''
 
@@ -486,12 +472,7 @@ ax.set_ylabel('$\t{t}$',font3)
 ax.tick_params(labelsize=14)
 labels = ax.get_xticklabels() + ax.get_yticklabels()
 [label.set_fontname('Arial') for label in labels]
-#设置图像像素及大小
-plt.rcParams['figure.figsize']=(6.0,4.5)
-plt.rcParams['savefig.dpi'] = 300 #图片像素
-plt.rcParams['figure.dpi'] = 300 #分辨率
-fig.tight_layout(pad=0.5, h_pad=0.5, w_pad=0.5)
-fig.savefig('FIG9_h.eps', format='eps', dpi=300)
+plt.title('DaPINN x^3 error')
 plt.show()
 
 
@@ -551,12 +532,7 @@ ax.set_ylabel('$\t{t}$',font3)
 ax.tick_params(labelsize=14)
 labels = ax.get_xticklabels() + ax.get_yticklabels()
 [label.set_fontname('Arial') for label in labels]
-#设置图像像素及大小
-plt.rcParams['figure.figsize']=(8.0,6)
-plt.rcParams['savefig.dpi'] = 300 #图片像素
-plt.rcParams['figure.dpi'] = 300 #分辨率
-fig.tight_layout(pad=0.5, h_pad=0.5, w_pad=0.5)
-fig.savefig('FIG9_d.eps', format='eps', dpi=300)
+plt.title('PINN predict')
 plt.show()
 
 
@@ -594,10 +570,5 @@ ax.set_ylabel('$\t{t}$',font3)
 ax.tick_params(labelsize=14)
 labels = ax.get_xticklabels() + ax.get_yticklabels()
 [label.set_fontname('Arial') for label in labels]
-#设置图像像素及大小
-plt.rcParams['figure.figsize']=(6.0,4.5)
-plt.rcParams['savefig.dpi'] = 300 #图片像素
-plt.rcParams['figure.dpi'] = 300 #分辨率
-fig.tight_layout(pad=0.5, h_pad=0.5, w_pad=0.5)
-fig.savefig('FIG9_g.eps', format='eps', dpi=300)
+plt.title('PINN error')
 plt.show()

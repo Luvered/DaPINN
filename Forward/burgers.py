@@ -194,7 +194,7 @@ ic = dde.icbc.IC(
 DApinndata = dde.data.TimePDE(
     geomtime, DApinnpde, [bc, ic], num_domain=2000, num_boundary=100, num_initial=200,mode="x3tt"
 )
-net = dde.nn.FNN([5] + [40] * 4 + [1], "tanh", "Glorot normal")
+net = dde.nn.FNN([5] + [40] * 3 + [1], "tanh", "Glorot normal")
 DApinnmodel = dde.Model(DApinndata, net)
 
 time_start = time.time()  # 记录开始时间
@@ -258,7 +258,7 @@ ic = dde.icbc.IC(
 data = dde.data.TimePDE(
     geomtime, pde, [bc, ic], num_domain=2000, num_boundary=100, num_initial=200
 )
-net = dde.nn.FNN([2] + [40] * 4 + [1], "tanh", "Glorot normal")
+net = dde.nn.FNN([2] + [40] * 3 + [1], "tanh", "Glorot normal")
 model = dde.Model(data, net)
 
 time_start = time.time()  # 记录开始时间

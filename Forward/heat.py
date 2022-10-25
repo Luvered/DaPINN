@@ -53,9 +53,9 @@ dapinnx2data = dde.data.TimePDE(
     geomtime,
     dapinnx2pde,
     [bc, ic],
-    num_domain=105,
-    num_boundary=15,
-    num_initial=15,
+    num_domain=30,
+    num_boundary=10,
+    num_initial=10,
     num_test=2540,
     solution=heat_solution,
     mode="x2t"
@@ -116,9 +116,9 @@ dapinnx3data = dde.data.TimePDE(
     geomtime,
     dapinnx3pde,
     [bc, ic],
-    num_domain=105,
-    num_boundary=15,
-    num_initial=15,
+    num_domain=30,
+    num_boundary=10,
+    num_initial=10,
     num_test=2540,
     solution=heat_solution,mode="x3t"
 )
@@ -171,9 +171,9 @@ PINNdata = dde.data.TimePDE(
     geomtime,
     PINNpde,
     [bc, ic],
-    num_domain=105,
-    num_boundary=15,
-    num_initial=15,
+    num_domain=30,
+    num_boundary=10,
+    num_initial=10,
     num_test=2540,
     solution=heat_solution
 )
