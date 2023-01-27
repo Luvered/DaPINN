@@ -6,7 +6,7 @@ import dapinn as dde
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.integrate import solve_bvp
-from deepxde.backend import tf
+from dapinn.backend import tf
 import csv
 import math
 
