@@ -2,7 +2,7 @@
 import dapinn as dde
 import numpy as np
 # Backend tensorflow.compat.v1 or tensorflow
-from deepxde.backend import tf
+from dapinn.backend import tf
 from matplotlib import pyplot as plt
 # Backend pytorch
 # import torch
